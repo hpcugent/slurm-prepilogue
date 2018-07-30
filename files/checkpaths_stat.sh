@@ -30,7 +30,7 @@ done
 unset VSCPROFILELOADED
 . /etc/profile.d/vsc.sh
 
-source `dirname $0`/functions
+source `dirname $0`/functions.sh
 
 function mystat {
     local name vscname path cmd

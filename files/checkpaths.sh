@@ -36,7 +36,7 @@ else
     debugoutroot=/tmp/checkpaths.out
 fi
 
-source $(dirname "$0")/functions
+source $(dirname "$0")/functions.sh
 
 # note: don't use '2>&1' or '&>' for stderr redirection in STATCMD, because it doesn't work for tcsh (>& works both bash and tcsh)
 STATCMD="/usr/libexec/slurm/prolog/checkpaths_stat.sh"
