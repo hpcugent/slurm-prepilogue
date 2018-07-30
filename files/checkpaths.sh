@@ -67,7 +67,7 @@ touchfile "${STAT_CACHE}"
 #
 # Even when empty, this has to be fine
 # The cache only holds last $cacheduser users
-cache_ts=$(/bin/grep "$userid" $STAT_CACHE 2>/dev/null | /bin/cut -f1 -d ' ') or 0
+cache_ts=$(/bin/grep "$userid" $STAT_CACHE 2>/dev/null | /bin/cut -f1 -d ' ') || 0
 now=$(date +%s)
 if [ $((cache_ts)) -gt $((now - CACHE_THRESHOLD)) ]; then
     echo "cacheok $userid" >> $debugoutroot 2>&1
