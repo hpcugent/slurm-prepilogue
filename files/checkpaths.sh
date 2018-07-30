@@ -82,8 +82,8 @@ if [ $? -ne 1 ]; then
     if [ -f /var/mmfs/gen/mmsdrfs ]; then
         # we expect a mounted gpfs filessystem
         # probably some scratch filesystem
-        gpfss=${mount -t gpfs 2>/dev/null | wc -l}
-        if [ $gpfss -eq 0 ]; then
+        gpfss=$(mount -t gpfs 2>/dev/null | wc -l)
+        if [ "$gpfss" -eq 0 ]; then
             mk_health_error "${script_name}_gpfs${mode}"
             exit 2  # exit code > 1 ensures the job will be requeued
         fi
@@ -92,11 +92,11 @@ fi
 
 # FIXME: verify codes
 function errormsg () {
-    if [ $1 -eq 124 ]; then
+    if [ "$1" -eq 124 ]; then
         echo "timeout $TIMEOUT"
     else
         # index -1 etc are supported, so make sure the index is  > 0
-        if [ $1 -ge $ECSTART ]; then
+        if [ "$1" -ge $ECSTART ]; then
             echo "${NAMES[$1 - $ECSTART]}"
         else
             echo "ec $1"
@@ -107,7 +107,7 @@ function errormsg () {
 function dostat () {
     local cmd ec
     cmd="$STATCMD $ECSTART ${NAMES[@]}"
-    timeout $TIMEOUT su $userid -c "$cmd" >> $debugoutroot 2>&1
+    timeout $TIMEOUT su "$userid" -c "$cmd" >> $debugoutroot 2>&1
     ec=$?
     echo "$STATCMD $1 exitcode $ec user $userid"  >> $debugoutroot 2>&1
     return $ec
@@ -123,7 +123,7 @@ if ! dostat 1st; then
 else
     now=$(date +%s)
     # keep last CACHED_USERS users
-    last=$(/usr/bin/tail -"${CACHED_USERS}" "${STAT_CACHE}" | /bin/grep -v $userid)
+    last=$(/usr/bin/tail -"${CACHED_USERS}" "${STAT_CACHE}" | /bin/grep -v "$userid")
     /bin/echo "$last" > "${STAT_CACHE}"
     /bin/echo "$now $userid" >> $STAT_CACHE
 fi

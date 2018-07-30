@@ -28,9 +28,9 @@ done
 # Source the VSC_ variables
 # This potentially touches some paths for VO-related discovery
 unset VSCPROFILELOADED
-. /etc/profile.d/vsc.sh
+source /etc/profile.d/vsc.sh
 
-source `dirname $0`/functions.sh
+source $(dirname "$0")/functions.sh
 
 function mystat {
     local name vscname path cmd
@@ -43,25 +43,25 @@ function mystat {
         return 0
     fi
 
-    if [ $name == 'INSTITUTE_LOCAL' ]; then
+    if [ "$name" == 'INSTITUTE_LOCAL' ]; then
         path="/apps/$path"
     fi
 
-    if [ -z "$2" ]; then
+    if [ -z "${2}" ]; then
         cmd="stat"
     else
         cmd="ls"
     fi
 
-    errout=$(/usr/bin/$cmd $path 2>&1 )
+    errout=$(/usr/bin/$cmd "$path" 2>&1 )
     if [ $? -ne 0 ]; then
         # Fallback to 1; must fail
         ec=${error_map[$name]:-1}
 
         msg="$USER Failed to stat $path ec $ec out $(echo "$errout" | tr '\n' ' ')"
         logger "checkpaths_stat: ERROR $msg"
-        echo $msg
-        exit $ec
+        echo "$msg"
+        exit "$ec"
     fi
 }
 
@@ -80,8 +80,8 @@ mystat INSTITUTE_LOCAL 1
 
 
 # Site local and other tests
-uid=`id -u`
-if [ $uid -gt 60000 ]; then
+uid=$(id -u)
+if [ "$uid" -gt 60000 ]; then
     # Only for non-system users
     if [ "$VSC_INSTITUTE" == "gent" ]; then
         if [ "$VSC_INSTITUTE_CLUSTER" != "muk" ]; then
