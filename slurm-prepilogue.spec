@@ -25,8 +25,6 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildArch: x86_64
 
-Requires:
-
 %description
 slurm-prepilogue contains bash scripts that are to be executed during job prologue or epilogue
 to verify the node is in good shape to run jobs
@@ -41,11 +39,12 @@ to verify the node is in good shape to run jobs
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-
-cp -a files/* %{buildroot}
-
+install checkpaths.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 
 %clean
+rm -rf %{buildroot}
 
 %files
 %defattr(750,root,root,-)
@@ -55,6 +54,6 @@ cp -a files/* %{buildroot}
 
 
 %changelog
-* Mon July 30th 2018, Andy Georges <andy.georges@ugent.be>
+* Mon Jul 30 2018 Andy Georges <andy.georges@ugent.be>
 - Created spec file
 - Initial prolog scripts
