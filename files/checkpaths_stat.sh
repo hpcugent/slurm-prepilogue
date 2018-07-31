@@ -33,13 +33,12 @@ source /etc/profile.d/vsc.sh
 source $(dirname "$0")/functions.sh
 
 function mystat {
-    local name vscname path cmd
-    name=$1
-    vscname="VSC_$name"
-    path=${!vscname}
-
-    checkpaths_bypass "$name"
-    if [ $? -eq 1 ]; then
+    local name="$1" 
+    local vscname="VSC_$name"
+    local path=${!vscname}
+    local cmd
+    
+    if checkpaths_bypass "$name"; then
         return 0
     fi
 
@@ -74,7 +73,7 @@ fi
 
 mystat SCRATCH
 
-# can't use stat, as it does not trigger automount if apps is a separate mountpoint
+# cannot use stat, as it does not trigger automount if apps is a separate mountpoint
 # we don not expect that many files in the apps dir anyway, so ls is ok
 mystat INSTITUTE_LOCAL 1
 

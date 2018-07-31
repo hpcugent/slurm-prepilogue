@@ -75,9 +75,7 @@ if [ $((cache_ts)) -gt $((now - CACHE_THRESHOLD)) ]; then
     exit 0
 fi
 
-checkpaths_bypass gpfs
-
-if [ $? -ne 1 ]; then
+if ! checkpaths_bypass gpfs; then
     # Add basic gpfs check
     if [ -f /var/mmfs/gen/mmsdrfs ]; then
         # we expect a mounted gpfs filessystem
