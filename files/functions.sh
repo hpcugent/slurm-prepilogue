@@ -50,6 +50,19 @@ checkpaths_bypass () {
     return 1
 }
 
+function touchfile () {
+    local perm fn="$1"
+
+    perm=$(stat --format='%a %U %G' "$fn" 2>/dev/null)
+    if [ "$?" -ne 0 ]; then
+        touch "$fn"
+    fi
+    if [ "$perm" != "700 root root" ]; then
+        chown root.root "$fn"
+        chmod 0700 "$fn"
+    fi
+}
+
 function log () {
     logger -- "$@"
     debug "$@"

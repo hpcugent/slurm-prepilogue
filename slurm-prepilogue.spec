@@ -47,7 +47,7 @@ install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 rm -rf %{buildroot}
 
 %files
-%defattr(750,root,root,-)
+%defattr(755,root,root,-)
 /usr/libexec/slurm/prolog/checkpaths.sh
 /usr/libexec/slurm/prolog/checkpaths_stat.sh
 /usr/libexec/slurm/prolog/functions.sh
