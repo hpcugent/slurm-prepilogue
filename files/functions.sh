@@ -15,6 +15,8 @@
 
 HE=/var/tmp/healthscript.error
 
+SCONTROL=/usr/bin/scontrol
+
 function debug () {
     local debugfn
     debugfn=${DEBUGLOG:-$DEFAULT_DEBUGLOG}
@@ -44,6 +46,7 @@ checkpaths_bypass () {
         fi
     fi
 }
+
 # Touch file and set 0700
 function touchfile () {
     local perm fn="$1"
@@ -59,6 +62,7 @@ function touchfile () {
 }
 
 function mk_health_error () {
+    # deprecated, should not be used on SLURM, use set_drain instead
     local name="$1"
     shift
 
@@ -75,4 +79,10 @@ function mk_health_error () {
 function log () {
     logger -- "$@"
     debug "$@"
+}
+
+function set_drain () {
+    local reason="Prolog failure at job ${SLURM_JOB_ID} on $(date +%s): $1"
+
+    ${SCONTROL} update node=$(hostname) state=DRAIN reason="${reason}"
 }

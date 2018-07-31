@@ -14,10 +14,10 @@
 # #
 
 if [ -z "${1+x}" ]; then
-    # do nothing if not called with username as first argument
-    exit 0
+    # get the job's owner from the SLURM environment
+    userid="${SLURM_JOB_USER}"
 else
-    userid=$1
+    userid="$1"
 fi
 
 # A mode, like gadmin in healthscript
@@ -57,8 +57,8 @@ id "${userid}" >& /dev/null
 ec=$?
 echo "test id ${userid} exitcode ${ec}"  >> ${debugoutroot} 2>&1
 if [ $ec -ne 0 ]; then
-    mk_health_error "${script_name}_id${mode}"
-    exit 1  # if the user does not exist, the job should be cancelled, regardless
+    set_drain "User $userid does not exist"
+    exit 1  # if the user does not exist, the job should be pending, regardless
 fi
 
 touchfile "${STAT_CACHE}"
@@ -70,7 +70,7 @@ touchfile "${STAT_CACHE}"
 cache_ts=$(/bin/grep "$userid" $STAT_CACHE 2>/dev/null | /bin/cut -f1 -d ' ') || 0
 now=$(date +%s)
 if [ $((cache_ts)) -gt $((now - CACHE_THRESHOLD)) ]; then
-    echo "cacheok $userid" >> $debugoutroot 2>&1
+    echo "cacheok ${userid}" >> ${debugoutroot} 2>&1
     # use cached ok data
     exit 0
 fi
@@ -84,7 +84,7 @@ if [ $? -ne 1 ]; then
         # probably some scratch filesystem
         gpfss=$(mount -t gpfs 2>/dev/null | wc -l)
         if [ "$gpfss" -eq 0 ]; then
-            mk_health_error "${script_name}_gpfs${mode}"
+            set_drain "checkpaths failed gpfs${mode} for user ${userid}"
             exit 2  # exit code > 1 ensures the job will be requeued
         fi
     fi
@@ -117,7 +117,7 @@ if ! dostat 1st; then
     sleep 5
     if ! dostat 2nd; then
         ec=$?
-        mk_health_error "${script_name}_stat" "$(errormsg $ec)$mode"
+        set_drain "checkpaths_stat failed with $(errormsg $ec)$mode for user ${userid}"
         exit $ec
     fi
 else
