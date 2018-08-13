@@ -33,11 +33,11 @@ source /etc/profile.d/vsc.sh
 source $(dirname "$0")/functions.sh
 
 function mystat {
-    local name="$1" 
+    local name="$1"
     local vscname="VSC_$name"
     local path=${!vscname}
     local cmd
-    
+
     if checkpaths_bypass "$name"; then
         return 0
     fi
@@ -83,9 +83,7 @@ uid=$(id -u)
 if [ "$uid" -gt 60000 ]; then
     # Only for non-system users
     if [ "$VSC_INSTITUTE" == "gent" ]; then
-        if [ "$VSC_INSTITUTE_CLUSTER" != "muk" ]; then
-            mystat SCRATCH_KYUKON
-        fi
+        mystat SCRATCH_KYUKON
     fi
 fi
 
