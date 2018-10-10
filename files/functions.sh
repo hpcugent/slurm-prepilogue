@@ -76,11 +76,14 @@ function set_drain () {
 }
 
 function slurm_used_cores () {
-    local cores=$(${SCONTROL} show job=${SLURM_JOB_ID} | grep MinCPUsNode | cut -d"=" -f2 | cut -d" " -f1)
-    local available_cores=$(scontrol show node=${HOSTNAME} | grep CfgTRES= | cut -d"," -f1 | cut -d"=" -f3)
+    if [ -z ${SLURM_ACTUAL_NODE_CPUS+x} ]; then
+        return 1
+    fi
+    if [ -z ${SLURM_JOB_NODE_CPUS+x} ]; then
+        return 1
+    fi
 
-    logger "Available cores: $available_cores, used cores: $cores"
-    if [ $cores == $available_cores ]; then
+    if [ ${SLURM_ACTUAL_NODE_CPUS} -eq ${SLURM_JOB_NODE_CPUS} ]; then
         return 0
     else
         return 1
