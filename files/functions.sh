@@ -74,3 +74,18 @@ function set_drain () {
 
     ${SCONTROL} update node=$(hostname) state=DRAIN reason="${reason}"
 }
+
+function slurm_used_cores () {
+    if [ -z ${SLURM_ACTUAL_NODE_CPUS+x} ]; then
+        return 1
+    fi
+    if [ -z ${SLURM_JOB_NODE_CPUS+x} ]; then
+        return 1
+    fi
+
+    if [ ${SLURM_ACTUAL_NODE_CPUS} -eq ${SLURM_JOB_NODE_CPUS} ]; then
+        return 0
+    else
+        return 1
+    fi
+}
