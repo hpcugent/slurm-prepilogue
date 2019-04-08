@@ -27,8 +27,6 @@ else
     mode="_mode_$2"
 fi
 
-script_name=$(basename "$0")
-
 # one command, reduces total load time
 if [ -z "${CHECKPATHS_DEBUG+x}" ]; then
     debugoutroot=/dev/null
@@ -104,20 +102,31 @@ function errormsg () {
 
 function dostat () {
     local cmd ec
-    cmd="$STATCMD $ECSTART ${NAMES[@]}"
+    cmd="$STATCMD $ECSTART ${NAMES[*]}"
     timeout $TIMEOUT su "$userid" -c "$cmd" >> $debugoutroot 2>&1
     ec=$?
     echo "$STATCMD $1 exitcode $ec user $userid"  >> $debugoutroot 2>&1
     return $ec
 }
 
-if ! dostat 1st; then
-    sleep 5
-    if ! dostat 2nd; then
-        ec=$?
-        set_drain "checkpaths_stat failed with $(errormsg $ec)$mode for user ${userid}"
-        exit $ec
+STAT_DELAYS=(5 30 90)
+STAT_EVENTS=(1st 2nd 3rd)
+STAT_OK=false
+
+for ((i=0; i < ${#STAT_DELAYS[@]}; ++i));
+do
+    if ! dostat "${STAT_EVENTS[i]}"; then
+        STAT_EC=$?
+        sleep "${STAT_DELAYS[i]}"
+    else
+        STAT_OK=true
+        break
     fi
+done
+
+if ! $STAT_OK; then
+    set_drain "checkpaths_stat failed with $(errormsg ${STAT_EC})$mode for user ${userid}"
+    exit ${STAT_EC}
 else
     now=$(date +%s)
     # keep last CACHED_USERS users

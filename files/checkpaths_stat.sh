@@ -52,7 +52,7 @@ function mystat {
         cmd="ls"
     fi
 
-    errout=$(/usr/bin/$cmd "$path" 2>&1 )
+    errout=$(/usr/bin/$cmd "$path" 2>&1)
     if [ $? -ne 0 ]; then
         # Fallback to 1; must fail
         ec=${error_map[$name]:-1}
