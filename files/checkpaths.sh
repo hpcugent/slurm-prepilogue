@@ -109,15 +109,17 @@ function dostat () {
     return $ec
 }
 
-STAT_DELAYS=(5 30 90)
+STAT_TIMEOUTS=(30 90 180)
 STAT_EVENTS=(1st 2nd 3rd)
 STAT_OK=false
 
-for ((i=0; i < ${#STAT_DELAYS[@]}; ++i));
+for ((i=0; i < ${#STAT_TIMEOUTS[@]}; ++i));
 do
-    if ! dostat "${STAT_EVENTS[i]}"; then
-        STAT_EC=$?
-        sleep "${STAT_DELAYS[i]}"
+    TIMEOUT="${STAT_TIMEOUTS[i]}"
+    dostat "${STAT_EVENTS[i]}"
+    STAT_EC=$?
+    if [ $STAT_EC -ne 0 ]; then
+        logger "dostat loop $i (TIMEOUT ${TIMEOUT}) exited with return value ${STAT_EC}"
     else
         STAT_OK=true
         break
