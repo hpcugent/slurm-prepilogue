@@ -22,7 +22,6 @@
 # than 2) comma-delimited arguments, of which ending status is the 3rd.
 # Just pass through notifications without an ending status.
 
-SEFF=@bindir@/seff
 MAIL=/bin/mail
 
 IFS=","
@@ -30,25 +29,30 @@ array=($2)
 IFS=" "
 
 # Get the ClusterName
-ClusterName=`@bindir@/scontrol show config | grep ClusterName | awk '{printf("[%s]", $3)}'`
+ClusterName=${SLURM_CLUSTER_NAME}
 subject="$ClusterName $2"
 recipient=$3
 
-# If we decide later to seff based on specific status codes, 
+# If we decide later to seff based on specific status codes,
 # we can test against $status.
-status=`echo "${array[2]}" | tr -d ' '`
+status=$(echo "${array[2]}" | tr -d ' ')
 if [ -n "$status" ]; then
     sarray=(${array[0]})
     IFS="="
-    sarray=(${sarray[1]})
+    if [ "${sarray[1]}" = "Array" ]; then
+        sarray=(${sarray[3]})
+    else
+        sarray=(${sarray[1]})
+    fi
     IFS=" "
-    jobid=${sarray[1]}
+    jobid="${sarray[1]}"
+    # Remove the trailing "_*" until seff supports array jobs fully
+    jobid=${jobid%"_*"}
     # Fork a child so sleep is asynchronous.
     {
         sleep 60
-        $SEFF $jobid | $MAIL -s "$subject" $recipient
+        slurm_jobinfo "$jobid" | $MAIL -s "$subject" "$recipient"
     } &
 else
-    $MAIL -s "$subject" $recipient
+    $MAIL -s "$subject" "$recipient"
 fi
-
