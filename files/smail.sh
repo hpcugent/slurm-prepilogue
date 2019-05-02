@@ -46,8 +46,6 @@ if [ -n "$status" ]; then
     fi
     IFS=" "
     jobid="${sarray[1]}"
-    # Remove the trailing "_*" until seff supports array jobs fully
-    jobid=${jobid%"_*"}
     # Fork a child so sleep is asynchronous.
     {
         sleep 60
