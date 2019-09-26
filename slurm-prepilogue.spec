@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.4
+Version: 0.5
 Release: 1
 
 Group: Applications/System
@@ -42,6 +42,8 @@ mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install checkpaths.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install mps_prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install smail.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 
 %clean
@@ -52,6 +54,8 @@ rm -rf %{buildroot}
 /usr/libexec/slurm/prolog/checkpaths.sh
 /usr/libexec/slurm/prolog/checkpaths_stat.sh
 /usr/libexec/slurm/prolog/functions.sh
+/usr/libexec/slurm/prolog/prolog.sh
+/usr/libexec/slurm/prolog/mps_prolog.sh
 /usr/libexec/slurm/smail.sh
 
 
