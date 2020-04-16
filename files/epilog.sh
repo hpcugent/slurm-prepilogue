@@ -20,8 +20,6 @@ LOGGER=/usr/bin/logger
 function user_ipcs_cleanup(){
     # Called at end of last job by user to:
     #  * shared memory segments that have no processes attached
-    #  * semaphore arrays if the user only has one job
-    #  * message queues if the user only had one job
 
     ${LOGGER} -p local0.alert "Starting user_ipcs_cleanup() for ${SLURM_JOB_USER} from ${SLURM_JOB_ID}"
 
