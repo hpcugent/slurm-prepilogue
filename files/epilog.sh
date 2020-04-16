@@ -61,7 +61,7 @@ if [ $SLURM_UID -lt 2500000 ] ; then
     exit 0
 fi
 
-user_cleanup
+user_ipcs_cleanup
 
 
 ${LOGGER} -p local0.alert "********  finished $0 for job $SLURM_JOB_ID"
