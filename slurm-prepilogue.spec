@@ -55,7 +55,7 @@ rm -rf %{buildroot}
 /usr/libexec/slurm/prolog/checkpaths.sh
 /usr/libexec/slurm/prolog/checkpaths_stat.sh
 /usr/libexec/slurm/prolog/functions.sh
-/usr/libexec/slurm/prolog/epilog.sh
+/usr/libexec/slurm/epilog/epilog.sh
 /usr/libexec/slurm/prolog/prolog.sh
 /usr/libexec/slurm/prolog/mps_prolog.sh
 /usr/libexec/slurm/smail.sh
