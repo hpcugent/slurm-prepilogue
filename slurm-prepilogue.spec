@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.6
+Version: 0.7
 Release: 1
 
 Group: Applications/System
@@ -42,6 +42,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install checkpaths.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install epilog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
 install prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install mps_prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install smail.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
@@ -54,12 +55,15 @@ rm -rf %{buildroot}
 /usr/libexec/slurm/prolog/checkpaths.sh
 /usr/libexec/slurm/prolog/checkpaths_stat.sh
 /usr/libexec/slurm/prolog/functions.sh
+/usr/libexec/slurm/prolog/epilog.sh
 /usr/libexec/slurm/prolog/prolog.sh
 /usr/libexec/slurm/prolog/mps_prolog.sh
 /usr/libexec/slurm/smail.sh
 
 
 %changelog
+* Thu Apr 16 2020 Andy Georges <andy.georges@ugent.be>
+- Added epilog.sh to clean up shared memory leftovers
 * Wed Apr 17 2019 Andy Georges <andy.georges@ugent.be>
 - Added smail.sh script to mail users in the epilogue
 * Mon Jul 30 2018 Andy Georges <andy.georges@ugent.be>
