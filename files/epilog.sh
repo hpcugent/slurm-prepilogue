@@ -13,7 +13,6 @@
 #
 # #
 
-HERE=$(dirname "$0")
 LOGGER=/usr/bin/logger
 
 
@@ -36,30 +35,30 @@ function user_ipcs_cleanup(){
                 } \
             }' \
     ); do
-        /usr/bin/ipcrm -s $S
+        /usr/bin/ipcrm -s "$S"
     done
 
     ${LOGGER} -p local0.alert "Finished user_ipcs_cleanup() for ${SLURM_JOB_USER} from ${SLURM_JOB_ID}"
 }
 
-if [ x$SLURM_UID = "x" ] ; then
-    exit 0
-fi
-if [ x$SLURM_JOB_ID = "x" ] ; then
+if [ x"$SLURM_UID" = "x" ] ; then
     exit 0
 fi
 
+if [ x"$SLURM_JOB_ID" = "x" ] ; then
+    exit 0
+fi
 
-${LOGGER} -p local0.alert "********  starting $0 for job $SLURM_JOB_ID"
 
 #
 # Only run for valid VSC user IDs
 #
-if [ $SLURM_UID -lt 2500000 ] ; then
+if [ "$SLURM_UID" -lt 2500000 ] ; then
     exit 0
 fi
 
-user_ipcs_cleanup
+${LOGGER} -p local0.alert "********  starting $0 for job $SLURM_JOB_ID"
 
+user_ipcs_cleanup
 
 ${LOGGER} -p local0.alert "********  finished $0 for job $SLURM_JOB_ID"
