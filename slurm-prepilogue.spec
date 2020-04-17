@@ -39,6 +39,7 @@ to verify the node is in good shape to run jobs
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
 install checkpaths.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
