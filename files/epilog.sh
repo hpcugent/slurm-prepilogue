@@ -35,7 +35,7 @@ function user_ipcs_cleanup(){
                 } \
             }' \
     ); do
-        /usr/bin/ipcrm -s "$S"
+        /usr/bin/ipcrm -m "$S"
     done
 
     ${LOGGER} -p local0.alert "Finished user_ipcs_cleanup() for ${SLURM_JOB_USER} from ${SLURM_JOB_ID}"
