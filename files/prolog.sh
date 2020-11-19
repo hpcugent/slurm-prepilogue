@@ -15,12 +15,10 @@
 
 HERE=$(dirname $0)
 
-$HERE/checkpaths.sh
-if [ $? -gt 0 ]; then
-    exit $?
-fi
-
-$HERE/mps_prolog.sh
-if [ $? -gt 0 ]; then
-    exit $?
-fi
+for check in checkpaths.sh mps_prolog.sh; do
+    $HERE/$check
+    ec=$?
+    if [ $ec -gt 0 ]; then
+        exit $ec
+    fi
+done
