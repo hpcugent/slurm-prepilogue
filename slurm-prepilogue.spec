@@ -1,5 +1,5 @@
 # #
-# Copyright 2018-2018 Ghent University
+# Copyright 2018-2020 Ghent University
 #
 # This file is part of slurm-prepilogue
 # originally created by the HPC team of Ghent University (http://ugent.be/hpc/en),
@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.9
+Version: 0.10
 Release: 1
 
 Group: Applications/System

@@ -23,6 +23,7 @@
 # Just pass through notifications without an ending status.
 
 MAIL=/bin/mail
+export MAILRC=/var/spool/slurm/.mailrc
 
 IFS=","
 array=($2)
