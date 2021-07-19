@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.10
+Version: 0.11
 Release: 1
 
 Group: Applications/System
@@ -63,6 +63,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 19 2021 Alex Domingo <alex.domingo.toro@vub.be>
+- Set PMIx direct connection in prolog
 * Thu Apr 16 2020 Andy Georges <andy.georges@ugent.be>
 - Added epilog.sh to clean up shared memory leftovers
 * Wed Apr 17 2019 Andy Georges <andy.georges@ugent.be>
