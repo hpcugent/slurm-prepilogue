@@ -15,6 +15,8 @@
 
 HE=/var/tmp/healthscript.error
 CHECKPATHS_BYPASS_PREFIX=/etc/bypass_checkpaths_
+# clustername based on vsc_config
+CHECKPATHS_CLUSTER=$(/usr/bin/sed -n 's/^cluster_name=//p' /etc/vsc_config.cfga 2>/dev/null)
 
 SCONTROL=/usr/bin/scontrol
 

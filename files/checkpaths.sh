@@ -48,7 +48,7 @@ TIMEOUT=30
 # must be lower than 256
 ECSTART=200
 # order is not important
-NAMES=(HOME DATA SCRATCH INSTITUTE_LOCAL SCRATCH_DELCATTY)
+NAMES=(HOME DATA SCRATCH INSTITUTE_LOCAL SCRATCH_KYUKON)
 
 # Test user non-cached
 id "${userid}" >& /dev/null

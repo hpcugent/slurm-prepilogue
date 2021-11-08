@@ -43,7 +43,11 @@ function mystat {
     fi
 
     if [ "$name" == 'INSTITUTE_LOCAL' ]; then
-        path="/apps/$path"
+        if [ "$VSC_INSTITUTE_CLUSTER" == 'dodrio' ]; then
+            path="/dodrio/apps"
+        else
+            path="/apps/$path"
+        fi
     fi
 
     if [ -z "${2}" ]; then
@@ -82,7 +86,7 @@ mystat INSTITUTE_LOCAL 1
 uid=$(id -u)
 if [ "$uid" -gt 60000 ]; then
     # Only for non-system users
-    if [ "$VSC_INSTITUTE" == "gent" ]; then
+    if [ "$VSC_INSTITUTE" == "gent" && "$VSC_INSTITUTE_CLUSTER" != 'dodrio' ]; then
         mystat SCRATCH_KYUKON
     fi
 fi
