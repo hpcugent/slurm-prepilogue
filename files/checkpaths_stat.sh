@@ -61,10 +61,20 @@ function mystat {
         # Fallback to 1; must fail
         ec=${error_map[$name]:-1}
 
+        if [ \( "$name" == 'HOME' -o "$name" == "DATA" \) -a "$VSC_INSTITUTE_CLUSTER" == 'dodrio' ]; then
+            fail=false
+            msg_level='WARN'
+        else
+            fail=true
+            msg_level='ERROR'
+        fi
+
         msg="$USER Failed to stat $path ec $ec out $(echo "$errout" | tr '\n' ' ')"
-        logger "checkpaths_stat: ERROR $msg"
+        logger "checkpaths_stat: $msg_level $msg"
         echo "$msg"
-        exit "$ec"
+        if $fail; then
+            exit "$ec"
+        fi
     fi
 }
 
