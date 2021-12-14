@@ -95,14 +95,14 @@ function errormsg () {
         if [ "$1" -ge $ECSTART ]; then
             name="VSC_${NAMES[$1 - $ECSTART]}"
             if [ "$name" == 'VSC_INSTITUTE_LOCAL' ]; then
-                name = "APPS"
+                name="APPS"
             elif [ "$name" == "VSC_SCRATCH" ]; then
                 if [ "$CHECKPATHS_CLUSTER" == 'dodrio' ]; then
-                    name = "user homedir HOME / $name"
+                    name="user homedir HOME / $name"
                 fi
             elif [ "$name" == "VSC_HOME" ]; then
                  if [ "$CHECKPATHS_CLUSTER" != 'dodrio' ]; then
-                    name = "user homedir $name"
+                    name="user homedir $name"
                  fi
             fi
             echo "$name"
