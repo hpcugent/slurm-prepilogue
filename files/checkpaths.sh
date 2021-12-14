@@ -94,7 +94,7 @@ function errormsg () {
         # index -1 etc are supported, so make sure the index is  > 0
         if [ "$1" -ge $ECSTART ]; then
             name="VSC_${NAMES[$1 - $ECSTART]}"
-            if [ "$name" == 'VSC_INSTITUTE_LOCAL' ]; then
+            if [ "$name" == "VSC_INSTITUTE_LOCAL" ]; then
                 name="APPS"
             elif [ "$name" == "VSC_SCRATCH" ]; then
                 if [ "$CHECKPATHS_CLUSTER" == 'dodrio' ]; then
