@@ -97,10 +97,13 @@ function slurm_job_exists () {
 
     # if private tempdir is configured, check for existing binddirs in /dev/shm
     #    (cleaned after reboot)
-    # assumes spank runs after prolog; if not, we expect exactly one file present
     local base=/dev/shm/slurm
     if grep "base=$base" /etc/slurm/plugstack.conf >& /dev/null; then
-        if ls $base.* >& /dev/null; then
+        # seems like spank runs before prolog. so we do expetc to find 1 here
+        #    but there's no harm if there isn't any
+        local shms
+        shms=$(ls $base.* 2> /dev/null | wc -l)
+        if [ "$shms" -lt 2 ]; then
             # no jobs, return fail
             return 1
         fi
