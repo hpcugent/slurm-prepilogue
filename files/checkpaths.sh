@@ -149,22 +149,4 @@ else
     /bin/echo "$now $userid" >> $STAT_CACHE
 fi
 
-
-if slurm_used_cores; then
-    logger "Flushing swap ..."
-    # flush dirty memory
-    sync
-    # drop caches
-    echo 3 > /proc/sys/vm/drop_caches
-    # cleanup swap
-    # assume that swap is properly configured (-a reads /etc/fstab; which is used when booting)
-    /sbin/swapoff -a
-    /sbin/swapon -a
-    # report this
-    log "flushmemcache drop_caches swapon swapoff"
-else
-    logger "Unable to flush cache since job partially uses node"
-fi
-
-
 exit 0

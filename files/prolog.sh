@@ -15,7 +15,7 @@
 
 HERE=$(dirname $0)
 
-for check in checkpaths.sh mps_prolog.sh; do
+for check in checkpaths.sh mps_prolog.sh drop_cache.sh; do
     $HERE/$check
     ec=$?
     if [ $ec -gt 0 ]; then

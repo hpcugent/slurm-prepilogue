@@ -13,10 +13,10 @@
 #
 # #
 
-HE=/var/tmp/healthscript.error
+export HE=/var/tmp/healthscript.error
 CHECKPATHS_BYPASS_PREFIX=/etc/bypass_checkpaths_
 # clustername based on vsc_config
-CHECKPATHS_CLUSTER=$(/usr/bin/sed -n 's/^cluster_name=//p' /etc/vsc_config.cfg 2>/dev/null)
+export CHECKPATHS_CLUSTER=$(/usr/bin/sed -n 's/^cluster_name=//p' /etc/vsc_config.cfg 2>/dev/null)
 
 SCONTROL=/usr/bin/scontrol
 
@@ -90,4 +90,22 @@ function slurm_used_cores () {
     else
         return 1
     fi
+}
+
+function slurm_job_exists () {
+    # derive existence of slurm jobs indirectly
+
+    # if private tempdir is configured, check for existing binddirs in /dev/shm
+    #    (cleaned after reboot)
+    # assumes spank runs after prolog; if not, we expect exactly one file present
+    local base=/dev/shm/slurm
+    if grep "base=$base" /etc/slurm/plugstack.conf >& /dev/null; then
+        if ls $base.* >& /dev/null; then
+            # no jobs, return fail
+            return 1
+        fi
+    fi
+
+    # when in doubt, return 0 (i.e. yes/success)
+    return 0
 }
