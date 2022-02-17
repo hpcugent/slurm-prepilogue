@@ -25,7 +25,7 @@ touchfile "${DROP_CACHE}"
 NOW=$(date +%s)
 DROP=false
 if slurm_used_cores; then
-    log "drop_cache slurm_sed_cores full node"
+    log "drop_cache slurm_used_cores full node"
     DROP=true
 elif ! slurm_job_exists; then
     log "drop_cache no other job exists"
