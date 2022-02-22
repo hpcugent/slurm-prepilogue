@@ -22,6 +22,10 @@ ALLOW_CACHE_EXPIRE_FN=/etc/slurm/drop_cache
 
 touchfile "${DROP_CACHE}"
 
+if [ -f "$ALLOW_CACHE_EXPIRE_FN" ] ; then
+     source "$ALLOW_CACHE_EXPIRE_FN"
+fi
+
 NOW=$(date +%s)
 DROP=false
 if slurm_used_cores; then
@@ -31,18 +35,13 @@ elif ! slurm_job_exists; then
     log "drop_cache no other job exists"
     DROP=true
 else
-
-    if [ -f "$ALLOW_CACHE_EXPIRE_FN" ] ; then
-        source "$ALLOW_CACHE_EXPIRE_FN"
-
-        if [ "${DROP_CACHE_EXPIRE:-0}" -eq 1 ]; then
-            cache_ts=$(cat $DROP_CACHE) || 0
-            if [ $((cache_ts)) -gt $((NOW - CACHE_THRESHOLD)) ]; then
-                log "drop_cache no full node but recently dropped, no action"
-            else
-                log "drop_cache no full node, dropped too long ago"
-                DROP=true
-            fi
+    if [ "${DROP_CACHE_EXPIRE:-0}" -eq 1 ]; then
+        cache_ts=$(cat $DROP_CACHE) || 0
+        if [ $((cache_ts)) -gt $((NOW - CACHE_THRESHOLD)) ]; then
+            log "drop_cache no full node but recently dropped, no action"
+        else
+            log "drop_cache no full node, dropped too long ago"
+            DROP=true
         fi
     fi
 fi
@@ -59,6 +58,15 @@ if $DROP; then
     /sbin/swapon -a
     # report this
     log "drop_cache drop_caches swapon swapoff"
+
+    if [ -n "$DROP_CACHE_CAT" ]; then
+        if cat "$DROP_CACHE_CAT" >& /dev/null; then
+            log "drop_cache drop_cache_cat ok"
+        else
+            log "drop_cache drop_cache_cat $DROP_CACHE_CAT failed"
+            exit 1
+        fi
+    fi
 
     /bin/echo "$NOW" > $DROP_CACHE
 fi
