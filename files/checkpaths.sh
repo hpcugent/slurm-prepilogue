@@ -121,7 +121,7 @@ function dostat () {
     return $ec
 }
 
-STAT_TIMEOUTS=(30 90 180)
+STAT_TIMEOUTS=(10 20 30)
 STAT_EVENTS=(1st 2nd 3rd)
 STAT_OK=false
 
