@@ -80,10 +80,7 @@ function mystat {
 
 mystat HOME
 
-# Brussels does not have a $VSC_DATA
-if [ "$VSC_INSTITUTE" != "brussel" ]; then
-    mystat DATA
-fi
+mystat DATA
 
 mystat SCRATCH
 
