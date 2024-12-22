@@ -22,6 +22,11 @@
 # than 2) comma-delimited arguments, of which ending status is the 3rd.
 # Just pass through notifications without an ending status.
 
+if [[ "$SLURM_JOB_COMMENT" =~ mail:: ]]; then
+    # switch to html mail mode
+    exec $(dirname -- "${BASH_SOURCE[0]}")/smail.html.sh
+fi
+
 MAIL=/bin/mail
 export MAILRC=/var/spool/slurm/.mailrc
 

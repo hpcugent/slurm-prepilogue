@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.17
+Version: 0.18
 Release: 1
 
 Group: Applications/System
@@ -48,6 +48,7 @@ install prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install mps_prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install drop_cache.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install smail.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
+install smail.html.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 
 %clean
 rm -rf %{buildroot}
@@ -62,6 +63,7 @@ rm -rf %{buildroot}
 /usr/libexec/slurm/prolog/mps_prolog.sh
 /usr/libexec/slurm/prolog/drop_cache.sh
 /usr/libexec/slurm/smail.sh
+/usr/libexec/slurm/smail.html.sh
 
 
 %changelog
