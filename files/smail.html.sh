@@ -5,7 +5,9 @@ if [[ "$SLURM_CLUSTER_NAME" =~ "dodrio" ]]; then
 else
     ood_endpoint=login
 fi
-ood_file_url="https://${ood_endpoint}.hpc.ugent.be/pun/sys/dashboard/files/fs/"
+ood_dashboard_url="https://${ood_endpoint}.hpc.ugent.be/pun/sys/dashboard"
+ood_file_url="$ood_dashboard_url/files/fs/"
+ood_session_anchor_url="$ood_dashboard_url/batch_connect/sessions#id_"
 
 # Mail has same environment variables as pro/epiloge, and some extras
 
@@ -40,8 +42,10 @@ rows=()
 function add_row {
     value="$2"
     if [ -n "$value" ] && [ "$value" != "null" ]; then
-        if [ "$3" == "ood" ]; then
+        if [ "$3" == "oodfile" ]; then
 	        value="<a href=\"$ood_file_url$value\">$value</a>"
+        elif [ "$3" == "oodapp" ]; then
+	        value="<a href=\"$ood_session_anchor_url$value\">$value</a>"
         elif [ "$3" == "timestamp" ]; then
             value="$(date -d @"$value" '+%Y-%m-%dT%H:%M:%S')"
         fi
@@ -74,6 +78,10 @@ function add_comment {
 
 # Nothing is added when empty
 
+add_comment "Result" .result oodfile
+add_comment "Comment" .comment
+
+
 add_env Id SLURM_JOB_ID
 add_env Name SLURM_JOB_NAME
 
@@ -103,11 +111,23 @@ add_json Submit ".submit_time.number" timestamp
 add_json Start ".start_time.number" timestamp
 add_json End  ".end_time.number" timestamp
 
-add_json "Working directory" .current_working_directory ood
-add_json "Stdout" ".stdout" ood
-add_json "Stderr" ".stderr" ood
-add_comment "OOD session" .ood_session ood
-add_comment "Result" .result ood
+export CURRENT_WORKING_DIR="$(from_job_json .current_working_directory)"
+add_json "Working directory" CURRENT_WORKING_DIR ood
+add_json "Stdout" ".stdout" oodfile
+add_json "Stderr" ".stderr" oodfile
+
+# Custom OOD code
+# OOD submit.yml.erb binding has no access to session, only to context
+#    staged_root is always the workdir for now, so we can derive the OOD session data from it
+OOD_SESSION_DIR="$(from_comment .ood_session_dir)"
+if [ "$OOD_SESSION_DIR" == "is workdir" ]; then
+    OOD_SESSION_DIR="$CURRENT_WORKING_DIR"
+fi
+export OOD_SESSION_DIR
+export OOD_SESSION_ID="$(basename "$OOD_SESSION_DIR")"
+
+add_env "OOD session directory" OOD_SESSION_DIR oodfile
+add_env "OOD interactive app" OOD_SESSION_ID oodapp
 
 
 # BEGIN only
