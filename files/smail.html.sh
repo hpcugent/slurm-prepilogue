@@ -78,6 +78,7 @@ function add_comment {
 
 # Nothing is added when empty
 
+add_comment "Info" .info
 add_comment "Result" .result oodfile
 add_comment "Comment" .comment
 
@@ -149,7 +150,7 @@ add_env "Running time" SLURM_JOB_RUN_TIME
 mail_user="$(from_job_json .mail_user)"
 
 jobinfo=$(from_comment .info)
-if [ -z "$jobninfo" ]; then
+if [ -z "$jobinfo" ]; then
     jobinfo="$SLURM_JOB_NAME"
 fi
 

@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.19
+Version: 0.20
 Release: 1
 
 Group: Applications/System
