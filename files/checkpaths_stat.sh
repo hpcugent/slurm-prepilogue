@@ -56,6 +56,7 @@ function mystat {
         cmd="ls"
     fi
 
+    logger "checkpaths_stat: running /usr/bin/$cmd $path"
     errout=$(/usr/bin/$cmd "$path" 2>&1)
     if [ $? -ne 0 ]; then
         # Fallback to 1; must fail
@@ -76,6 +77,7 @@ function mystat {
             exit "$ec"
         fi
     fi
+    logger "checkpaths_stat: /usr/bin/$cmd $path ok"
 }
 
 mystat HOME
