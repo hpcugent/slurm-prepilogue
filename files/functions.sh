@@ -71,7 +71,7 @@ function log () {
 }
 
 function set_drain () {
-    local reason="Prolog failure at job ${SLURM_JOB_ID} on $(date +%s): $1"
+    local reason="Prolog failure at job ${SLURM_JOB_ID} on $(date +%Y%m%d-%H%M%S): $1"
     logger "Draining node: $reason"
 
     ${SCONTROL} update node=$(hostname) state=DRAIN reason="${reason}"
