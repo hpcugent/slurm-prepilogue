@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # #
 # Copyright 2018-2018 Ghent University
 #
@@ -15,7 +15,7 @@
 
 HERE=$(dirname $0)
 
-for check in checkpaths.sh mps_prolog.sh drop_cache.sh; do
+for check in checkpaths.sh mps_prolog.sh nvidia-memtest.sh drop_cache.sh; do
     $HERE/$check
     ec=$?
     if [ $ec -gt 0 ]; then
