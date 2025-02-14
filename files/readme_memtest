@@ -1,0 +1,38 @@
+
+memtestG80 is built from the source available at
+https://github.com/ihaque/memtestG80
+
+See https://universiteitgent.atlassian.net/browse/HPC-11757
+
+The current version of the binary was built from commit c899a8f4cab on rhel 8.
+The same binary also works on rhel 9.
+
+
+Building:
+
+CUDA_VERSION=12-3
+yum install -y cuda-nvcc-${CUDA_VERSION}.x86_64 cuda-command-line-tools-${CUDA_VERSION}.x86_64 cuda-driver-devel-${CUDA_VERSION}.x86_64 cuda-cudart-devel-${CUDA_VERSION}.x86_64
+export PATH=/usr/local/cuda/bin/:/usr/local/cuda-12.3/bin/:$PATH
+make -f Makefiles/Makefile.linux64
+
+
+Running it:
+
+     -------------------------------------------------------------
+     |                      MemtestG80 v1.00                     |
+     |                                                           |
+     | Usage: memtestG80 [flags] [MB GPU RAM to test] [# iters]  |
+     |                                                           |
+     | Defaults: GPU 0, 128MB RAM, 50 test iterations            |
+     | Amount of tested RAM will be rounded up to nearest 2MB    |
+     -------------------------------------------------------------
+
+      Available flags:
+        --gpu N ,-g N : run test on the Nth (from 0) CUDA GPU
+        --license ,-l : show license terms for this build
+
+
+A very simple test to see if the GPU can allocate memory:
+
+./memtestG80 --gpu 0 1 1
+
