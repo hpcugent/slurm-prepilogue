@@ -90,6 +90,13 @@ if [ $((cache_ts)) -gt $((now - CACHE_THRESHOLD)) ]; then
     exit 0
 fi
 
+timeout 30 su "$userid" -c "true"
+ec=$?
+if [ $ec -ne 0 ]; then
+    set_drain "su to user $userid failed"
+    exit 1
+fi
+
 if ! checkpaths_bypass gpfs; then
     # Add basic gpfs check
     if [ -f /var/mmfs/gen/mmsdrfs ]; then
