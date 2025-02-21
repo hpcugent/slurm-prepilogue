@@ -56,7 +56,7 @@ function mystat {
         cmd="ls"
     fi
 
-    logger "checkpaths_stat: running /usr/bin/$cmd $path"
+    logger "checkpaths_stat for job ${SLURM_JOBID}: running /usr/bin/$cmd $path"
     errout=$(/usr/bin/$cmd "$path" 2>&1)
     if [ $? -ne 0 ]; then
         # Fallback to 1; must fail
@@ -71,13 +71,13 @@ function mystat {
         fi
 
         msg="$USER Failed to stat $path ec $ec out $(echo "$errout" | tr '\n' ' ')"
-        logger "checkpaths_stat: $msg_level $msg"
+        logger "checkpaths_stat for job ${SLURM_JOBID}: $msg_level $msg"
         echo "$msg"
         if $fail; then
             exit "$ec"
         fi
     fi
-    logger "checkpaths_stat: /usr/bin/$cmd $path ok"
+    logger "checkpaths_stat for job ${SLURM_JOBID}: /usr/bin/$cmd $path ok"
 }
 
 mystat HOME

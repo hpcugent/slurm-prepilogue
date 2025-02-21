@@ -69,6 +69,7 @@ cache_ts=$(/bin/grep "$userid" $STAT_CACHE 2>/dev/null | /bin/cut -f1 -d ' ') ||
 now=$(date +%s)
 if [ $((cache_ts)) -gt $((now - CACHE_THRESHOLD)) ]; then
     echo "cacheok ${userid}" >> ${debugoutroot} 2>&1
+    logger "checkpaths for job ${SLURM_JOBID}: cache ok"
     # use cached ok data
     exit 0
 fi
@@ -131,7 +132,7 @@ do
     dostat "${STAT_EVENTS[i]}"
     STAT_EC=$?
     if [ $STAT_EC -ne 0 ]; then
-        logger "dostat loop $i (TIMEOUT ${TIMEOUT}) exited with return value ${STAT_EC}"
+        logger "dostat for job ${SLURM_JOBID} loop $i (TIMEOUT ${TIMEOUT}) exited with return value ${STAT_EC}"
     else
         STAT_OK=true
         break
