@@ -24,13 +24,15 @@ for name in "$@"; do
     error_map+=( [$name]=$((ecstart++)) )
 done
 
+source $(dirname "$0")/functions.sh
+logger "checkpaths_stat for job ${SLURM_JOBID}: loading vsc profile"
 
 # Source the VSC_ variables
 # This potentially touches some paths for VO-related discovery
 unset VSCPROFILELOADED
 source /etc/profile.d/vsc.sh
 
-source $(dirname "$0")/functions.sh
+logger "checkpaths_stat for job ${SLURM_JOBID}: loaded vsc profile"
 
 function mystat {
     local name="$1"
