@@ -50,6 +50,22 @@ ECSTART=200
 # order is not important
 NAMES=(HOME DATA SCRATCH INSTITUTE_LOCAL SCRATCH_KYUKON)
 
+LOCKFILE="/run/lock/slurm-prolog.${userid}.lock"
+exec 9> $LOCKFILE
+
+if flock -n 9
+then
+    logger "checkpaths for job ${SLURM_JOBID}: lock ok"
+else
+    # if another prolog is running, sleep a bit to let it create a cache file
+    # so we can (hopefully) skip these tests
+    # note that we never block on the lockfile, so the prolog should
+    # continue after max 15 sec
+    SLEEP=$((5 + $RANDOM % 10))
+    logger "checkpaths for job ${SLURM_JOBID}: lock failed - sleep $SLEEP"
+    sleep $SLEEP
+fi
+
 # Test user non-cached
 id "${userid}" >& /dev/null
 ec=$?
@@ -72,6 +88,13 @@ if [ $((cache_ts)) -gt $((now - CACHE_THRESHOLD)) ]; then
     logger "checkpaths for job ${SLURM_JOBID}: cache ok"
     # use cached ok data
     exit 0
+fi
+
+timeout 30 su "$userid" -c "true"
+ec=$?
+if [ $ec -ne 0 ]; then
+    set_drain "su to user $userid failed"
+    exit 1
 fi
 
 if ! checkpaths_bypass gpfs; then
