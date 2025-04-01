@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.26
+Version: 0.27
 Release: 1
 
 Group: Applications/System
@@ -40,6 +40,7 @@ to verify the node is in good shape to run jobs
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
+mkdir -p $RPM_BUILD_ROOT/etc/slurm/
 install checkpaths.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
