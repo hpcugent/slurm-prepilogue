@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.25
+Version: 0.26
 Release: 1
 
 Group: Applications/System
@@ -51,6 +51,7 @@ install memtestG80 $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install drop_cache.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install smail.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 install smail.html.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
+install job_submit.lua $RPM_BUILD_ROOT/etc/slurm/
 
 %clean
 rm -rf %{buildroot}
@@ -68,9 +69,12 @@ rm -rf %{buildroot}
 /usr/libexec/slurm/prolog/drop_cache.sh
 /usr/libexec/slurm/smail.sh
 /usr/libexec/slurm/smail.html.sh
+/etc/slurm/job_submit.lua
 
 
 %changelog
+* Tue Apr 1 2025 Anndy Georges <andy.georges@ugent.be>
+- Added job submission filter
 * Thu Apr 16 2020 Andy Georges <andy.georges@ugent.be>
 - Added epilog.sh to clean up shared memory leftovers
 * Wed Apr 17 2019 Andy Georges <andy.georges@ugent.be>
