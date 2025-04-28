@@ -8,6 +8,11 @@ fi
 
 source $(dirname "$0")/functions.sh
 
+if [ ! -c /dev/gdrdrv ]
+then
+    set_drain "/dev/gdrdrv doesn't exist"
+fi
+
 log "$0 checking GPUs for job ${SLURM_JOBID} (${SLURM_JOB_GPUS})"
 
 GPU_MEMTEST=/usr/libexec/slurm/prolog/memtestG80
