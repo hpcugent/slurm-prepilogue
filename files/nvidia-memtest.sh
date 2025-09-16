@@ -13,6 +13,10 @@ then
     set_drain "/dev/gdrdrv doesn't exist"
 fi
 
+# temporarily disable gpu memtest
+logger $0 not running gpu test - see HPC-12284
+exit 0
+
 log "$0 checking GPUs for job ${SLURM_JOBID} user ${SLURM_JOB_USER} (${SLURM_JOB_GPUS})"
 
 GPU_MEMTEST=/usr/libexec/slurm/prolog/memtestG80
