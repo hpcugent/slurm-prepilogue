@@ -63,8 +63,7 @@ if $DROP; then
         if cat "$DROP_CACHE_CAT" >& /dev/null; then
             log "drop_cache drop_cache_cat ok"
         else
-            log "drop_cache drop_cache_cat $DROP_CACHE_CAT failed"
-            exit 1
+            set_drain "drop_cache_cat $DROP_CACHE_CAT failed"
         fi
     fi
 
