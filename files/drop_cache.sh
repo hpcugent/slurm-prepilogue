@@ -1,6 +1,6 @@
 #!/bin/bash
 ##
-# Copyright 2018-2022 Ghent University
+# Copyright 2018-2026 Ghent University
 #
 # This file is part of slurm-prepilogue
 # originally created by the HPC team of Ghent University (http://ugent.be/hpc/en),
