@@ -24,7 +24,7 @@ fi
 
 if [ -z "${PROLOG_SCRIPTS}" ]
 then
-    PROLOG_SCRIPTS="checkpaths.sh mps_prolog.sh nvidia-memtest.sh drop_cache.sh"
+    PROLOG_SCRIPTS="checkpaths.sh nrpe_checks.sh mps_prolog.sh nvidia-memtest.sh drop_cache.sh"
 fi
 
 for check in ${PROLOG_SCRIPTS}; do
