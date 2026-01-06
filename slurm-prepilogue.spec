@@ -14,7 +14,7 @@
 
 Summary: Slurm prologue and epilogue scripts for HPCUGent
 Name: slurm-prepilogue
-Version: 0.34
+Version: 0.35
 Release: 1
 
 Group: Applications/System
@@ -41,16 +41,8 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
 mkdir -p $RPM_BUILD_ROOT/etc/slurm/
-install checkpaths.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install epilog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
-install prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install nrpe_checks.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install mps_prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install nvidia-memtest.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install memtestG80 $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
-install drop_cache.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install prolog/* $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install epilog/* $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
 install smail.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 install smail.html.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 install job_submit.lua $RPM_BUILD_ROOT/etc/slurm/
@@ -60,15 +52,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(755,root,root,-)
-/usr/libexec/slurm/prolog/checkpaths.sh
-/usr/libexec/slurm/prolog/checkpaths_stat.sh
-/usr/libexec/slurm/prolog/functions.sh
-/usr/libexec/slurm/epilog/epilog.sh
-/usr/libexec/slurm/prolog/prolog.sh
-/usr/libexec/slurm/prolog/mps_prolog.sh
-/usr/libexec/slurm/prolog/nvidia-memtest.sh
-/usr/libexec/slurm/prolog/memtestG80
-/usr/libexec/slurm/prolog/drop_cache.sh
+/usr/libexec/slurm/prolog/*
+/usr/libexec/slurm/epilog/*
 /usr/libexec/slurm/smail.sh
 /usr/libexec/slurm/smail.html.sh
 /etc/slurm/job_submit.lua
