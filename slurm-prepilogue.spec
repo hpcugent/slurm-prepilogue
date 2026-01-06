@@ -46,6 +46,7 @@ install checkpaths_stat.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install functions.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install epilog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
 install prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
+install nrpe_checks.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install mps_prolog.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install nvidia-memtest.sh $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install memtestG80 $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
