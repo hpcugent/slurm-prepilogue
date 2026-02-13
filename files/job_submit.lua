@@ -14,7 +14,7 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
     slurm_gpu_only_partitions = {}
 
     -- try to read the configfile
-    -- returns nil of the file doesn't exist
+    -- returns nil if the file doesn't exist
     conf, err = loadfile(submit_filter_config_file)
 
     if conf then
