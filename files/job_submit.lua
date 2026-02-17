@@ -21,12 +21,20 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
         -- run the file as lua code
         conf()
 
+        part = job_desc.partition
+
+        if not part then
+            -- we can't get the default partition from slurm, so it must be set
+            -- in the config file
+            part = default_partition or ""
+        end
+
         -- example config entry:
         -- slurm_gpu_only_partitions["cubone_gpu"] = 1
-        if slurm_gpu_only_partitions[job_desc.partition] then
+        if slurm_gpu_only_partitions[part] then
              tres = job_desc.tres_per_node or ""
              if not string.match(tres, "gpu") then
-                slurm.log_user("Invalid GPU config specified for %s.", job_desc.partition)
+                slurm.log_user("Invalid GPU config specified for %s.", part)
                 return slurm.ERROR
             end
         end
