@@ -7,6 +7,28 @@ modules_dir = "/usr/libexec/slurm/lua_modules"
 package.path = package.path .. ";" .. modules_dir.."/?.lua"
 -- job_info = require("job_info")
 
+function check_gpu_requested(job_desc)
+    local tres_vals = {
+        tres_per_job = job_desc.tres_per_job or false,
+        tres_per_node = job_desc.tres_per_node or false,
+        tres_per_socket = job_desc.tres_per_socket or false,
+        tres_per_task = job_desc.tres_per_task or false
+    }
+    local gpu_requested = false
+
+    for tres_name,tres_value in pairs(tres_vals) do
+        if tres_value then
+            if string.find(tres_value, "gpu:0") then
+                return false
+            end
+            if string.find(tres_value, "gpu") then
+                gpu_requested = true
+            end
+        end
+    end
+    return gpu_requested
+end
+
 function slurm_job_submit(job_desc, part_list, submit_uid)
     local min_mem_mb = 1000  -- Set minimum memory requirement in MB
 
@@ -39,8 +61,7 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
         -- example config entry:
         -- slurm_gpu_only_partitions["cubone_gpu"] = 1
         if slurm_gpu_only_partitions[part] then
-             tres = job_desc.tres_per_node or ""
-             if not string.match(tres, "gpu") then
+             if not check_gpu_requested(job_desc) then
                 slurm.log_user("Invalid GPU config specified for %s.", part)
                 return slurm.ERROR
             end
