@@ -40,9 +40,11 @@ to verify the node is in good shape to run jobs
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
+mkdir -p $RPM_BUILD_ROOT/usr/libexec/slurm/lua_modules
 mkdir -p $RPM_BUILD_ROOT/etc/slurm/
 install prolog/* $RPM_BUILD_ROOT/usr/libexec/slurm/prolog/
 install epilog/* $RPM_BUILD_ROOT/usr/libexec/slurm/epilog/
+install lua_modules/* $RPM_BUILD_ROOT/usr/libexec/slurm/lua_modules/
 install smail.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 install smail.html.sh $RPM_BUILD_ROOT/usr/libexec/slurm/
 install job_submit.lua $RPM_BUILD_ROOT/etc/slurm/
@@ -54,6 +56,7 @@ rm -rf %{buildroot}
 %defattr(755,root,root,-)
 /usr/libexec/slurm/prolog/*
 /usr/libexec/slurm/epilog/*
+/usr/libexec/slurm/lua_modules/*
 /usr/libexec/slurm/smail.sh
 /usr/libexec/slurm/smail.html.sh
 /etc/slurm/job_submit.lua

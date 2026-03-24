@@ -3,8 +3,15 @@
 -- This file does not need to exist, but if it exists, it needs to be valid lua
 submit_filter_config_file = "/etc/slurm/submit_filter_conf.lua"
 
+modules_dir = "/usr/libexec/slurm/lua_modules"
+package.path = package.path .. ";" .. modules_dir.."/?.lua"
+-- job_info = require("job_info")
+
 function slurm_job_submit(job_desc, part_list, submit_uid)
     local min_mem_mb = 1000  -- Set minimum memory requirement in MB
+
+    -- uncomment here and the require above to debug job info
+    -- job_info._job_info(job_desc, part_list, submit_uid)
 
     if job_desc.min_mem_per_node ~= nil and job_desc.min_mem_per_node < min_mem_mb then
         slurm.log_user("Error: Minimum memory per job is %d MB, please change your requirements.", min_mem_mb)
