@@ -34,9 +34,12 @@ for check in ${PROLOG_SCRIPTS}; do
     timeout ${PROLOG_SCRIPT_TIMEOUT} $HERE/$check
     ec=$?
     if [ $ec -eq 124 ]; then
-	set_drain "$check timeout"
+        set_drain "$check timeout"
+        # actually fail the prolog, so the job doesn't start here
+        exit 124
     elif [ $ec -gt 0 ]; then
-	set_drain "$check failed (ec $ec)"
+        # don't set drain message: the individual scripts should set a more
+        # detailed drain message, which we would overwrite otherwise
         exit $ec
     fi
 done
