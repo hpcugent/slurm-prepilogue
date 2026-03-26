@@ -15,6 +15,7 @@
 
 HERE=$(dirname $0)
 
+PROLOG_SCRIPT_TIMEOUT=900
 PROLOG_CONF=/etc/slurm/prolog.conf
 
 if [ -e ${PROLOG_CONF} ]
@@ -27,10 +28,15 @@ then
     PROLOG_SCRIPTS="checkpaths.sh nrpe_checks.sh nvidia-memtest.sh drop_cache.sh"
 fi
 
+source $(dirname "$0")/functions.sh
+
 for check in ${PROLOG_SCRIPTS}; do
-    $HERE/$check
+    timeout ${PROLOG_SCRIPT_TIMEOUT} $HERE/$check
     ec=$?
-    if [ $ec -gt 0 ]; then
+    if [ $ec -eq 124 ]; then
+	set_drain "$check timeout"
+    elif [ $ec -gt 0 ]; then
+	set_drain "$check failed (ec $ec)"
         exit $ec
     fi
 done
