@@ -93,22 +93,16 @@ function slurm_used_cores () {
 }
 
 function slurm_job_exists () {
-    # derive existence of slurm jobs indirectly
-
-    # if private tempdir is configured, check for existing binddirs in /dev/shm
-    #    (cleaned after reboot)
-    local base=/dev/shm/slurm
-    if grep "base=$base" /etc/slurm/plugstack.conf >& /dev/null; then
-        # seems like spank runs before prolog. so we do expetc to find 1 here
-        #    but there's no harm if there isn't any
-        local shms
-        shms=$(ls $base.* 2> /dev/null | wc -l)
-        if [ "$shms" -lt 2 ]; then
-            # no jobs, return fail
-            return 1
-        fi
+    # from man scontrol:
+    # "This contacts any slurmstepd's running locally, and does not contact slurmctld"
+    # note that the output contains spaces at the end
+    if scontrol listjobs | grep -E '^[0-9]+ *$' > /dev/null 2>&1
+    then
+        # other jobs exist
+        return 0
+    else
+        # no other (running) jobs exist
+        # there might be other jobs that are also running prolog
+        return 1
     fi
-
-    # when in doubt, return 0 (i.e. yes/success)
-    return 0
 }
