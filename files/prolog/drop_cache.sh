@@ -18,13 +18,27 @@ source "$(dirname "$0")/functions.sh"
 DROP_CACHE="/var/tmp/drop_cache.cache.ts"
 # 30 min
 CACHE_THRESHOLD=1800
+LOCK_TIMEOUT=900
 ALLOW_CACHE_EXPIRE_FN=/etc/slurm/drop_cache
-
-touchfile "${DROP_CACHE}"
 
 if [ -f "$ALLOW_CACHE_EXPIRE_FN" ] ; then
      source "$ALLOW_CACHE_EXPIRE_FN"
 fi
+
+LOCKFILE="/run/lock/slurm-prolog.drop_cache.lock"
+exec 9> $LOCKFILE
+
+# Don't run multiple drop_cache instances at the same time.
+if flock -w $LOCK_TIMEOUT 9
+then
+    logger "drop_cache for job ${SLURM_JOBID}: lock ok"
+else
+    logger "drop_cache for job ${SLURM_JOBID}: lock failed"
+    set_drain "drop_cache lock failed"
+    exit 1
+fi
+
+touchfile "${DROP_CACHE}"
 
 NOW=$(date +%s)
 DROP=false
