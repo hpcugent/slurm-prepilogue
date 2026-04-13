@@ -18,31 +18,44 @@ source "$(dirname "$0")/functions.sh"
 DROP_CACHE="/var/tmp/drop_cache.cache.ts"
 # 30 min
 CACHE_THRESHOLD=1800
+LOCK_TIMEOUT=900
 ALLOW_CACHE_EXPIRE_FN=/etc/slurm/drop_cache
-
-touchfile "${DROP_CACHE}"
 
 if [ -f "$ALLOW_CACHE_EXPIRE_FN" ] ; then
      source "$ALLOW_CACHE_EXPIRE_FN"
 fi
 
+LOCKFILE="/run/lock/slurm-prolog.drop_cache.lock"
+exec 9> $LOCKFILE
+
+# Don't run multiple drop_cache instances at the same time.
+if flock -w $LOCK_TIMEOUT 9
+then
+    logger "drop_cache for job ${SLURM_JOBID}: lock ok"
+else
+    logger "drop_cache for job ${SLURM_JOBID}: lock failed"
+    set_drain "drop_cache lock failed"
+    exit 1
+fi
+
+touchfile "${DROP_CACHE}"
+
 NOW=$(date +%s)
 DROP=false
-if slurm_used_cores; then
-    log "drop_cache slurm_used_cores full node"
-    DROP=true
-elif ! slurm_job_exists; then
-    log "drop_cache no other job exists"
+if ! slurm_job_exists; then
+    log "drop_cache for job ${SLURM_JOBID}: no other job exists, dropping cache"
     DROP=true
 else
     if [ "${DROP_CACHE_EXPIRE:-0}" -eq 1 ]; then
         cache_ts=$(cat $DROP_CACHE) || 0
         if [ $((cache_ts)) -gt $((NOW - CACHE_THRESHOLD)) ]; then
-            log "drop_cache no full node but recently dropped, no action"
+            log "drop_cache for job ${SLURM_JOBID}: other jobs exist and recently dropped, no action"
         else
-            log "drop_cache no full node, dropped too long ago"
+            log "drop_cache for job ${SLURM_JOBID}: other jobs exist, but dropped too long ago, dropping cache"
             DROP=true
         fi
+    else
+        log "drop_cache for job ${SLURM_JOBID}: other jobs exist, not dropping cache"
     fi
 fi
 
