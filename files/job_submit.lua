@@ -41,6 +41,7 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
     end
 
     slurm_gpu_only_partitions = {}
+    slurm_partition_cpus = {}
 
     -- try to read the configfile
     -- returns nil if the file doesn't exist
@@ -56,6 +57,19 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
             -- we can't get the default partition from slurm, so it must be set
             -- in the config file
             part = default_partition or ""
+        end
+
+        if slurm_partition_cpus[part] then
+            -- For each relevant partition, slurm_partition_cpus contains the
+            -- number of CPUs on a node that is available by default.
+            -- If the user asked more CPUs, we set core_spec to 0, to allow the
+            -- job to use the special cores as well.
+            -- If the user asked more CPUs than are available even when
+            -- core_spec is set to 0, slurm will refuse the job, so we don't
+            -- need to handle that case.
+            if job_desc.cpus_per_task > slurm_partition_cpus[part] then
+                job_desc.core_spec = 0
+            end
         end
 
         -- example config entry:
