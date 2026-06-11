@@ -60,6 +60,18 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
         end
 
         if slurm_partition_cpus[part] then
+            -- Some nil values that are currently not handled correctly by
+            -- slurm.
+            -- If slurm is fixed later on, this code should still work.
+            cpus_per_task = job_desc.cpus_per_task
+            if cpus_per_task == 65534 then
+                cpus_per_task = nil
+            end
+            min_nodes = job_desc.min_nodes
+            if min_nodes == 4294967294 then
+                min_nodes = nil
+            end
+
             -- For each relevant partition, slurm_partition_cpus contains the
             -- number of CPUs on a node that is available by default.
             -- If the user asked more CPUs, we set core_spec to 0, to allow the
@@ -67,8 +79,28 @@ function slurm_job_submit(job_desc, part_list, submit_uid)
             -- If the user asked more CPUs than are available even when
             -- core_spec is set to 0, slurm will refuse the job, so we don't
             -- need to handle that case.
-            if job_desc.cpus_per_task > slurm_partition_cpus[part] then
+            if cpus_per_task ~= nil and cpus_per_task > slurm_partition_cpus[part] then
+                slurm.log_info("setting core spec to 0: cpus_per_task %d", cpus_per_task)
                 job_desc.core_spec = 0
+            elseif min_nodes == nil then
+                -- If the user didn't specify a number of nodes, only the
+                -- number of cpus per task (checked above) is relevant, so we
+                -- don't need further checks.
+                --
+                -- slurm.log_info("not setting core spec: min_nodes is null")
+            else
+                -- If the user specified a number of tasks and a number of
+                -- nodes, we try to see if they fit. It seems min_cpus is set
+                -- to the total requested in that case.
+                -- Note that this does not cover all possible combinations, but
+                -- if users want strange combinations, they should make sure
+                -- they know what they're doing.
+                if (job_desc.min_cpus / min_nodes) > slurm_partition_cpus[part] then
+                    slurm.log_info("setting core spec to 0: min_cpus %d, min_nodes %d", job_desc.min_cpus, min_nodes)
+                    job_desc.core_spec = 0
+                else
+                    -- slurm.log_info("not setting core spec: %d %d", job_desc.min_cpus, min_nodes)
+                end
             end
         end
 
